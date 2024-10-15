@@ -8,6 +8,7 @@ package gatewayapi
 import (
 	"fmt"
 
+	"k8s.io/apimachinery/pkg/types"
 	"k8s.io/utils/ptr"
 	gwapiv1 "sigs.k8s.io/gateway-api/apis/v1"
 	gwapiv1a2 "sigs.k8s.io/gateway-api/apis/v1alpha2"
@@ -17,11 +18,10 @@ import (
 	"github.com/envoyproxy/gateway/internal/gatewayapi/resource"
 	"github.com/envoyproxy/gateway/internal/gatewayapi/status"
 	"github.com/envoyproxy/gateway/internal/ir"
-	"k8s.io/apimachinery/pkg/types"
 )
 
 func (t *Translator) applyBackendTLSSetting(backendRef gwapiv1.BackendObjectReference, backendNamespace string, parent gwapiv1a2.ParentReference, resources *resource.Resources, envoyProxy *egv1a1.EnvoyProxy) (*ir.TLSUpstreamConfig, error) {
-	upstreamConfig, policy, err := t.processBackendTLSPolicy(backendRef, backendNamespace, parent, resources, envoyProxy)
+	upstreamConfig, policy, err := t.processBackendTLSPolicy(backendRef, backendNamespace, parent, resources)
 	if err != nil {
 		return nil, err
 	}
@@ -33,7 +33,6 @@ func (t *Translator) processBackendTLSPolicy(
 	backendNamespace string,
 	parent gwapiv1a2.ParentReference,
 	resources *resource.Resources,
-	envoyProxy *egv1a1.EnvoyProxy,
 ) (*ir.TLSUpstreamConfig, *gwapiv1a3.BackendTLSPolicy, error) {
 	policy := getBackendTLSPolicy(resources.BackendTLSPolicies, backendRef, backendNamespace)
 	if policy == nil {
