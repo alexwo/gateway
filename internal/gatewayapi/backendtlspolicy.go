@@ -17,6 +17,7 @@ import (
 	"github.com/envoyproxy/gateway/internal/gatewayapi/resource"
 	"github.com/envoyproxy/gateway/internal/gatewayapi/status"
 	"github.com/envoyproxy/gateway/internal/ir"
+	"k8s.io/apimachinery/pkg/types"
 )
 
 func (t *Translator) applyBackendTLSSetting(backendRef gwapiv1.BackendObjectReference, backendNamespace string, parent gwapiv1a2.ParentReference, resources *resource.Resources, envoyProxy *egv1a1.EnvoyProxy) (*ir.TLSUpstreamConfig, error) {
@@ -58,32 +59,6 @@ func (t *Translator) processBackendTLSPolicy(
 	}
 
 	status.SetAcceptedForPolicyAncestors(&policy.Status, ancestorRefs, t.GatewayControllerName)
-	// apply defaults as per envoyproxy
-	if envoyProxy != nil {
-		if envoyProxy.Spec.BackendTLS != nil {
-			if len(envoyProxy.Spec.BackendTLS.Ciphers) > 0 {
-				tlsBundle.Ciphers = envoyProxy.Spec.BackendTLS.Ciphers
-			}
-			if len(envoyProxy.Spec.BackendTLS.ECDHCurves) > 0 {
-				tlsBundle.ECDHCurves = envoyProxy.Spec.BackendTLS.ECDHCurves
-			}
-			if len(envoyProxy.Spec.BackendTLS.SignatureAlgorithms) > 0 {
-				tlsBundle.SignatureAlgorithms = envoyProxy.Spec.BackendTLS.SignatureAlgorithms
-			}
-			if envoyProxy.Spec.BackendTLS.MinVersion != nil {
-				tlsBundle.MinVersion = ptr.To(ir.TLSVersion(*envoyProxy.Spec.BackendTLS.MinVersion))
-			}
-			if envoyProxy.Spec.BackendTLS.MaxVersion != nil {
-				tlsBundle.MaxVersion = ptr.To(ir.TLSVersion(*envoyProxy.Spec.BackendTLS.MaxVersion))
-			}
-			if len(envoyProxy.Spec.BackendTLS.ALPNProtocols) > 0 {
-				tlsBundle.ALPNProtocols = make([]string, len(envoyProxy.Spec.BackendTLS.ALPNProtocols))
-				for i := range envoyProxy.Spec.BackendTLS.ALPNProtocols {
-					tlsBundle.ALPNProtocols[i] = string(envoyProxy.Spec.BackendTLS.ALPNProtocols[i])
-				}
-			}
-		}
-	}
 	return tlsBundle, policy, nil
 }
 

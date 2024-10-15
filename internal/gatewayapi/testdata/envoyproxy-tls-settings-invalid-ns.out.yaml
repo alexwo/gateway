@@ -20,7 +20,7 @@ backendTLSPolicies:
         namespace: envoy-gateway
       conditions:
       - lastTransitionTime: null
-        message: 'Client authentication TLS secret is not located in the same namespace
+        message: 'ClientCertificateRef Secret is not located in the same namespace
           as Envoyproxy. Secret namespace: envoy-gateway-user-ns does not match Envoyproxy
           namespace: envoy-gateway-system.'
         reason: Invalid
@@ -209,7 +209,7 @@ tcpRoutes:
     parents:
     - conditions:
       - lastTransitionTime: null
-        message: 'client authentication TLS secret is not located in the same namespace
+        message: 'ClientCertificateRef Secret is not located in the same namespace
           as Envoyproxy. Secret namespace: envoy-gateway-user-ns does not match Envoyproxy
           namespace: envoy-gateway-system'
         reason: Failed to process the settings associated with the TCP route.
