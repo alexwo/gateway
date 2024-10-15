@@ -40,10 +40,6 @@ func (t *Translator) processBackendTLSPolicy(
 	}
 
 	tlsBundle, err := getBackendTLSBundle(policy, resources)
-	if err == nil && tlsBundle == nil {
-		return nil, nil, nil
-	}
-
 	ancestorRefs := getAncestorRefs(policy)
 	ancestorRefs = append(ancestorRefs, parent)
 
