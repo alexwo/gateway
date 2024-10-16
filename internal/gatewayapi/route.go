@@ -112,7 +112,7 @@ func (t *Translator) processHTTPRouteParentRefs(httpRoute *HTTPRouteContext, res
 		// any conditions that come out of it have to go on each RouteParentStatus,
 		// not on the Route as a whole.
 		routeRoutes, err := t.processHTTPRouteRules(httpRoute, parentRef, resources)
-		if err != nil && !parentRef.HasCondition(httpRoute, gwapiv1.RouteConditionAccepted, metav1.ConditionFalse) {
+		if err != nil {
 			routeStatus := GetRouteStatus(httpRoute)
 			status.SetRouteStatusCondition(routeStatus,
 				parentRef.routeParentStatusIdx,
