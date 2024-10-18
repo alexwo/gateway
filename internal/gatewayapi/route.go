@@ -986,7 +986,6 @@ func (t *Translator) processUDPRouteParentRefs(udpRoute *UDPRouteContext, resour
 		for _, backendRef := range udpRoute.Spec.Rules[0].BackendRefs {
 			ds, err := t.processDestination(backendRef, parentRef, udpRoute, resources)
 			// skip adding the route and provide the reason via route status.
-
 			if err != nil {
 				routeStatus := GetRouteStatus(udpRoute)
 				status.SetRouteStatusCondition(routeStatus,
